@@ -10,7 +10,6 @@ mobileLearn/
 │   ├── ex1/
 │   ├── ex2/
 │   └── pokedex-cli/
-
 ```
 
 ex1 e ex2: Exercícios introdutórios para praticar conceitos fundamentais de desenvolvimento mobile.
