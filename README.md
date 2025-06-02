@@ -1,8 +1,8 @@
-#📱 mobileLearn
+# 📱 mobileLearn
 
 Repositório de estudos e projetos práticos focados em desenvolvimento mobile, utilizando tecnologias como React Native, TypeScript e integração com APIs públicas.
 
-###📂 Estrutura do Projeto
+### 📂 Estrutura do Projeto
 
 ```
 mobileLearn/
@@ -17,7 +17,7 @@ ex1 e ex2: Exercícios introdutórios para praticar conceitos fundamentais de de
 
 pokedex-cli: Aplicação de linha de comando que consome a PokeAPI para buscar informações sobre Pokémon por nome ou ID.
 
-###🚀 Tecnologias Utilizadas
+### 🚀 Tecnologias Utilizadas
 
 -    Node.js
 
@@ -27,13 +27,12 @@ pokedex-cli: Aplicação de linha de comando que consome a PokeAPI para buscar i
 
 -   PokeAPI
 
-###🛠️ Como Executar os Projetos
+### 🛠️ Como Executar os Projetos
 
 Clone o repositório:
 ```
 git clone https://github.com/ThiagoMoralesRibeiro/mobileLearn.git
 cd mobileLearn
-
 ```
 
 Navegue até o diretório do projeto desejado, por exemplo:
