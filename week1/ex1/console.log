@@ -1,0 +1,6 @@
+[ 1, 2, 3, 4 ]
+{
+  A: [ { type: 'A', value: 'car' }, { type: 'A', value: 'skate' } ],
+  B: [ { type: 'B', value: 'bike' }, { type: 'B', value: 'motorcycle' } ]
+}
+160
