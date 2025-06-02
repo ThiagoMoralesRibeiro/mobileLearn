@@ -19,13 +19,13 @@ pokedex-cli: Aplicação de linha de comando que consome a PokeAPI para buscar i
 
 ###🚀 Tecnologias Utilizadas
 
-    Node.js
+-    Node.js
 
-    TypeScript
+-   TypeScript
 
-    React Native
+-   React Native
 
-    PokeAPI
+-   PokeAPI
 
 ###🛠️ Como Executar os Projetos
 
@@ -39,17 +39,14 @@ cd mobileLearn
 Navegue até o diretório do projeto desejado, por exemplo:
 ```
 cd week1/pokedex-cli
-
 ```
 Instale as dependências
 ```
 npm install
-
 ```
 Execute o projeto:
 ```
 ts-node pokedex.ts pikachu
-
 ```
 Certifique-se de ter o ts-node instalado globalmente ou como dependência do projeto.
 
