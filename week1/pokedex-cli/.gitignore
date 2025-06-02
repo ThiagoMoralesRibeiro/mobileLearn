@@ -1,0 +1,16 @@
+
+# Ignora node_modules em qualquer lugar
+**/node_modules/
+
+# Ignora pastas de build geradas em qualquer lugar
+**/dist/
+**/build/
+**/out/
+**/lib/
+
+# Ignora arquivos .js e .js.map gerados por TypeScript
+**/*.js
+**/*.js.map
+
+# Cache do TypeScript
+**/*.tsbuildinfo
