@@ -21,6 +21,14 @@ export default function Pokedex() {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccessMessage] = useState("");
+  const [searchedPokemon, setSearchedPokemon] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("searchedPokemon");
+    if (stored) {
+      setSearchedPokemon(JSON.parse(stored));
+    }
+  }, []);
 
   useEffect(() => {
     if (pokemon) {
@@ -47,7 +55,15 @@ export default function Pokedex() {
       if (!response.ok) throw new Error("Pokemon não encontrado");
 
       const data: Pokemon = await response.json();
+      const alreadySearched = searchedPokemon.some(p => p.name == data.name);
+      if (!alreadySearched) {
+        const updatedList = [data, ...searchedPokemon];
+        setSearchedPokemon(updatedList);
+        localStorage.setItem("searchedPokemon", JSON.stringify(updatedList));
+
+      }
       setPokemon(data);
+
 
     } catch (error) {
       setError("Pokémon não encontrado 😢");
@@ -71,12 +87,25 @@ export default function Pokedex() {
       <button className="pokedex-button" onClick={searchPokemon}>
         Buscar
       </button>
+      <button
+        className="pokedex-button"
+        onClick={() => {
+          setSearchedPokemon([]);
+          localStorage.removeItem("searchedPokemon");
+        }}
+      >
+        Limpar histórico
+      </button>
+
 
       {loading && <p className="pokedex-loading">Carregando...</p>}
       {error && <p className="pokedex-error">{error}</p>}
       {success && <p className="pokedex-success">{success}</p>}
-
-      {pokemon && <PokemonCard pokemon={pokemon} />}
+      <div className="pokedex-cards">
+        {searchedPokemon.map((pokemon) => (
+          <PokemonCard pokemon={pokemon} />
+        ))}
+      </div>
     </div>
 
 
