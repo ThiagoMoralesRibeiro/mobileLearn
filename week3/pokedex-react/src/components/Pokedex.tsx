@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Pokedex.css";
 import PokemonCard from "./PokeCard";
 
@@ -20,6 +20,19 @@ export default function Pokedex() {
 
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [error, setError] = useState("");
+  const [success, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (pokemon) {
+      setSuccessMessage(`✅ ${pokemon.name.toUpperCase()} encontrado com sucesso!`);
+
+      const timeout = setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [pokemon]);
 
   const searchPokemon = async () => {
     if (!name.trim()) return;
@@ -27,6 +40,7 @@ export default function Pokedex() {
     setLoading(true);
     setError("");
     setPokemon(null);
+    setSuccessMessage("");
 
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`);
@@ -60,6 +74,7 @@ export default function Pokedex() {
 
       {loading && <p className="pokedex-loading">Carregando...</p>}
       {error && <p className="pokedex-error">{error}</p>}
+      {success && <p className="pokedex-success">{success}</p>}
 
       {pokemon && <PokemonCard pokemon={pokemon} />}
     </div>

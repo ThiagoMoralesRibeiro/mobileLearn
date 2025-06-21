@@ -61,3 +61,10 @@
   display: block;
   margin: 0 auto 10px;
 }
+
+.pokedex-success {
+  color: #28a745;
+  font-weight: bold;
+  margin-top: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
