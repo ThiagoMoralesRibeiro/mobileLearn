@@ -1,54 +1,68 @@
-# React + TypeScript + Vite
+# Pokédex React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sleek and interactive Pokédex built with **React** and **TypeScript**. Browse, search, view details, and **favorite** your favorite Pokémon using data from the [PokéAPI](https://pokeapi.co/).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🖼️ Preview
 
-## Expanding the ESLint configuration
+![Pokedex Screenshot](./screenshot.png) <!-- Optional: replace with actual image -->
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- React (Hooks: `useState`, `useEffect`)
+- TypeScript for static typing
+- Fetch API for external data calls
+- Simple CSS Modules for styling
+
+---
+
+## 🚀 Features
+
+- 🗃️ **Paginated list** of Pokémon with “Next” and “Previous”
+- 🔎 **Search** by name (case-insensitive)
+- 🔧 **Detail view** showing stats, types, abilities
+- ⭐ **Favorites**: click the star icon to add/remove favorites  
+  • Persistent using `localStorage`  
+  • Viewable in a dedicated **Favorites** tab or view  
+- ⚠️ Loading and error handling states
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+
+- Node.js v14+  
+- npm or yarn
+
+### Steps
+
+```bash
+git clone https://github.com/ThiagoMoralesRibeiro/mobileLearn.git
+cd mobileLearn/week3/pokedex-react
+npm install        # or yarn
+npm start          # starts dev server (http://localhost:3000)
+npm run build      # prepare production build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Tree Folders
 ```
+pokedex-react/
+│
+├── public/                  # HTML principal e assets estáticos
+├── src/
+│   ├── components/          # Componentes React:
+│   │     • PokemonCard.tsx  # Cartão de exibição do Pokémon
+│   │     • PokemonList.tsx  # Lista paginada
+│   │     • SearchBar.tsx    # Campo de busca
+│   │     • PokemonDetail.tsx# Tela de detalhes
+│   │
+│   ├── services/            # Funções fetch para a PokéAPI
+│   ├── types/               # Interfaces TypeScript (ex: Pokemon, APIResponse)
+│   ├── App.tsx              # Fluxo de navegação e estado global
+│   └── index.tsx            # Renderização React
+│
+└── package.json             # Scripts e dependências
+```
+
