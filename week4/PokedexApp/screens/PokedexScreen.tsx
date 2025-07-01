@@ -74,8 +74,8 @@ export const PokedexScreen = () => {
         ListEmptyComponent={() => (
           <View style={styles.center}>
             <Text style={styles.empty}>
-              {search
-                ? `Nenhum Pokémon encontrado para "${search}".`
+              {search.trim()
+                ? `Nenhum Pokémon encontrado para "${search.trim()}".`
                 : 'Nenhum Pokémon para exibir no momento.'}
             </Text>
           </View>
