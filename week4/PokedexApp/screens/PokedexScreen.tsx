@@ -3,15 +3,16 @@ import { View, Text, FlatList, TextInput, StyleSheet, ActivityIndicator, Touchab
 import { getPokemons, getPokemonDetails } from '../services/api';
 import { Pokemon } from '../types/Pokemon';
 import { PokemonCard } from '../components/PokemonCard';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const limit = 30;
 
 export const PokedexScreen = () => {
+  const insets = useSafeAreaInsets();
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [search, setSearch] = useState('');
   const [loading, SetLoading] = useState(true);
   const [offset, setOffset] = useState(0);
-  const [success, setSuccessMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false); // scroll
   const [hasMore, setHasMore] = useState(true); // fim da lista
@@ -23,7 +24,7 @@ export const PokedexScreen = () => {
       setIsLoadingMore(true);
       const list = await getPokemons(limit, offset);
       if (list.length === 0) {
-        setHasMore(false); // fim da API
+        setHasMore(false);
         return;
       }
 
@@ -96,41 +97,43 @@ export const PokedexScreen = () => {
     ) : null;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pokédex</Text>
-      <TextInput
-        placeholder="Buscar pokémon..."
-        style={styles.input}
-        onChangeText={setSearch}
-      />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={[styles.container, {paddingTop: insets.top + 10}]}>
+        <Text style={styles.title}>Pokédex</Text>
+        <TextInput
+          placeholder="Buscar pokémon..."
+          style={styles.input}
+          onChangeText={setSearch}
+        />
 
 
 
-      <FlatList
-        data={filtered}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        renderItem={({ item }) => <PokemonCard pokemon={item} />}
-        contentContainerStyle={styles.list}
-        onEndReached={loadMorePkmn}
-        onEndReachedThreshold={0.6}
-        ListFooterComponent={renderFooter}
-        ListEmptyComponent={() => (
-          <View style={styles.center}>
-            <Text style={styles.empty}>
-              {search.trim()
-                ? `Nenhum Pokémon encontrado para "${search.trim()}".`
-                : "Nenhum Pokémon para exibir no momento."}
-            </Text>
-          </View>
-        )}
-      />
-    </View>
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({ item }) => <PokemonCard pokemon={item} />}
+          contentContainerStyle={[styles.list, {paddingBottom: insets.bottom + 16},]}
+          onEndReached={loadMorePkmn}
+          onEndReachedThreshold={0.6}
+          ListFooterComponent={renderFooter}
+          ListEmptyComponent={() => (
+            <View style={styles.center}>
+              <Text style={styles.empty}>
+                {search.trim()
+                  ? `Nenhum Pokémon encontrado para "${search.trim()}".`
+                  : "Nenhum Pokémon para exibir no momento."}
+              </Text>
+            </View>
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16 },
+  container: { flex: 1, paddingHorizontal: 16 },
   title: { fontSize: 32, fontWeight: 'bold', marginBottom: 12 },
   input: {
     backgroundColor: '#f1f1f1',
