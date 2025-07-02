@@ -30,3 +30,20 @@ export async function getPokemonDetails(url: string): Promise<Pokemon> {
 
 }
 
+export async function getPokemonMoreDetails(url: string): Promise<Pokemon> {
+  try {
+    const res = await axios.get(url);
+    return {
+      id: res.data.id,
+      name: res.data.name,
+      image: res.data.sprites.front_default,
+      types: res.data.types.map((t: any) => t.type.name),
+    };
+  } catch (error) {
+    console.error("Erro em getPokemonDetails:", error);
+    throw new Error(`Falha ao buscar detalhes do Pokémon (${url})`);
+  }
+
+}
+
+

@@ -4,6 +4,9 @@ import { getPokemons, getPokemonDetails } from '../services/api';
 import { Pokemon } from '../types/Pokemon';
 import { PokemonCard } from '../components/PokemonCard';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 const limit = 30;
 
@@ -15,7 +18,11 @@ export const PokedexScreen = () => {
   const [offset, setOffset] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false); // scroll
-  const [hasMore, setHasMore] = useState(true); // fim da lista
+  const [hasMore, setHasMore] = useState(true);// fim da lista
+
+  type Nav = NativeStackNavigationProp<RootStackParamList, 'Pokedex'>;
+
+  const navigation = useNavigation<Nav>();
 
   const loadMorePkmn = useCallback(async () => {
     if (isLoadingMore || !hasMore) return;
@@ -56,13 +63,7 @@ export const PokedexScreen = () => {
 
 
 
-  const handleNextPage = () => {
-    setOffset(prev => prev + limit);
-  };
 
-  const handlePreviousPage = () => {
-    setOffset(prev => Math.max(prev - limit, 0));
-  }
 
   /* useEffect(() => {
      if (!search.trim()) return;
@@ -98,7 +99,7 @@ export const PokedexScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={[styles.container, {paddingTop: insets.top + 10}]}>
+      <View style={[styles.container, { paddingTop: insets.top + 10 }]}>
         <Text style={styles.title}>Pokédex</Text>
         <TextInput
           placeholder="Buscar pokémon..."
@@ -112,8 +113,7 @@ export const PokedexScreen = () => {
           data={filtered}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
-          renderItem={({ item }) => <PokemonCard pokemon={item} />}
-          contentContainerStyle={[styles.list, {paddingBottom: insets.bottom + 16},]}
+          contentContainerStyle={[styles.list, { paddingBottom: insets.bottom + 16 }]}
           onEndReached={loadMorePkmn}
           onEndReachedThreshold={0.6}
           ListFooterComponent={renderFooter}
@@ -121,13 +121,21 @@ export const PokedexScreen = () => {
             <View style={styles.center}>
               <Text style={styles.empty}>
                 {search.trim()
-                  ? `Nenhum Pokémon encontrado para "${search.trim()}".`
+                  ? `Nenhum Pokémon encontrado para ${search.trim()}.`
                   : "Nenhum Pokémon para exibir no momento."}
               </Text>
             </View>
+          )} renderItem={({ item }) => (
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Details', { pokemon: item })}
+              style={{ flex: 1 }}           
+              activeOpacity={0.8}
+            >
+              <PokemonCard pokemon={item} />
+            </TouchableOpacity>
           )}
-        />
-      </View>
+        />      </View>
     </SafeAreaView>
   );
 };
