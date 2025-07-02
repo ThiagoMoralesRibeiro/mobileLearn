@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Pokemon } from '../types/Pokemon';
+import { capitalize } from '../utils/format';
 
 type DetailsRoute = RouteProp<RootStackParamList, 'Details'>;
 
@@ -45,7 +40,7 @@ export const DetailsScreen: React.FC<Props> = ({ route }) => {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.name}>{pokemon.name.toUpperCase()}</Text>
+        <Text style={styles.name}>{capitalize(pokemon.name)}</Text>
 
         <Image
           source={{ uri: pokemon.image }}
@@ -53,18 +48,21 @@ export const DetailsScreen: React.FC<Props> = ({ route }) => {
           resizeMode="contain"
         />
 
-        <Text style={styles.sectionTitle}>Tipos</Text>
+        <Text style={styles.sectionTitle}>
+          {pokemon.types.length === 1 ?
+          'Tipo' : 'Tipos'}
+        </Text>
         <View style={styles.typesRow}>
           {pokemon.types.map((t) => (
-            <View key={t} style={[ styles.typeBadge, 
-              { backgroundColor: typeColors[t] ?? '#ccc' },
+            <View key={t} style={[styles.typeBadge,
+            { backgroundColor: typeColors[t] ?? '#ccc' },
             ]}>
 
-          <Text style={styles.typeText}>{t}</Text>
-        </View>
+              <Text style={styles.typeText}>{t}</Text>
+            </View>
           ))}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView >
   );
 };
