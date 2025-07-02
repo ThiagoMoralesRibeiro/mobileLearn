@@ -1,35 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, FlatList, TextInput, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getPokemons, getPokemonDetails } from '../services/api';
 import { Pokemon } from '../types/Pokemon';
 import { PokemonCard } from '../components/PokemonCard';
+
+const limit = 30;
 
 export const PokedexScreen = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [search, setSearch] = useState('');
   const [loading, SetLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
   const [success, setSuccessMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // scroll
+  const [hasMore, setHasMore] = useState(true); // fim da lista
 
-  const fetchData = async () => {
+  const loadMorePkmn = useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+
     try {
+      setIsLoadingMore(true);
+      const list = await getPokemons(limit, offset);
+      if (list.length === 0) {
+        setHasMore(false); // fim da API
+        return;
+      }
 
-      SetLoading(true);
-      const list = await getPokemons(30); // primeiros 30 pokemons
       const details = await Promise.all(list.map(p => getPokemonDetails(p.url)));
-      setPokemons(details);
+      setPokemons(prev => [...prev, ...details]);
+      setOffset(prev => prev + limit);
     } catch (error: any) {
-      setError(error.message ?? 'Erro desconhecido');
-
+      setError(error.message);
     } finally {
-      SetLoading(false);
+      setIsLoadingMore(false);
     }
-  }
+
+  }, [offset, isLoadingMore, hasMore]);
 
 
   useEffect(() => {
-    fetchData();
+    const initLoad = async () => {
+      try {
+        SetLoading(true);
+        await loadMorePkmn();
+      } catch (e) {
+        setError('Erro ao carregar os pokémons.');
+      } finally {
+        SetLoading(false);
+      }
+    };
+    initLoad();
   }, []);
+
+
+
+  const handleNextPage = () => {
+    setOffset(prev => prev + limit);
+  };
+
+  const handlePreviousPage = () => {
+    setOffset(prev => Math.max(prev - limit, 0));
+  }
 
   /* useEffect(() => {
      if (!search.trim()) return;
@@ -56,6 +88,13 @@ export const PokedexScreen = () => {
     );
   }
 
+  const renderFooter = () =>
+    isLoadingMore ? (
+      <View style={styles.footer}>
+        <ActivityIndicator size="small" />
+      </View>
+    ) : null;
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pokédex</Text>
@@ -66,36 +105,46 @@ export const PokedexScreen = () => {
       />
 
 
+
       <FlatList
         data={filtered}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item }) => <PokemonCard pokemon={item} />}
+        contentContainerStyle={styles.list}
+        onEndReached={loadMorePkmn}
+        onEndReachedThreshold={0.6}
+        ListFooterComponent={renderFooter}
         ListEmptyComponent={() => (
           <View style={styles.center}>
             <Text style={styles.empty}>
               {search.trim()
                 ? `Nenhum Pokémon encontrado para "${search.trim()}".`
-                : 'Nenhum Pokémon para exibir no momento.'}
+                : "Nenhum Pokémon para exibir no momento."}
             </Text>
           </View>
-        )} />
-
+        )}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 60, paddingHorizontal: 16 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  message: { marginTop: 8, fontSize: 16 },
   title: { fontSize: 32, fontWeight: 'bold', marginBottom: 12 },
-  empty: { marginTop: 8, fontSize: 16, color: '#777', textAlign: 'center' },
   input: {
     backgroundColor: '#f1f1f1',
     padding: 10,
     borderRadius: 8,
     marginBottom: 20,
   },
+  list: { paddingBottom: 20 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  message: { fontSize: 16, marginTop: 8 },
+  error: { fontSize: 16, color: 'red', textAlign: 'center' },
+  empty: { fontSize: 16, color: '#666', textAlign: 'center' },
+  footer: {
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
 });
-
